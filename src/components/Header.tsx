@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Coins, Heart, LogIn } from 'lucide-react';
+import { Coins, Heart } from 'lucide-react';
 import { PointsModal } from './PointsModal';
 import { usePoints } from '../contexts/PointsContext';
 import { Cart } from './Cart';
@@ -23,13 +24,6 @@ export const Header = () => {
       </Link>
       
       <div className="flex items-center gap-4">
-        <Link 
-          to="/login"
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-blood text-white hover:bg-blood-dark transition-colors button-effect shadow-sm"
-        >
-          <LogIn className="h-5 w-5" />
-          <span className="font-medium">Login</span>
-        </Link>
         <button 
           onClick={() => setShowPointsModal(true)}
           className="flex items-center gap-2 px-4 py-2 rounded-full bg-blood/10 hover:bg-blood/20 transition-colors button-effect shadow-sm"

@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,8 +11,6 @@ import Pharmacy from "./pages/Pharmacy";
 import Redeem from "./pages/Redeem";
 import History from "./pages/History";
 import NotFound from "./pages/NotFound";
-import { Login } from "./pages/Login";
-import { HospitalDashboard } from "./pages/HospitalDashboard";
 import { PointsProvider } from "./contexts/PointsContext";
 import { CartProvider } from "./contexts/CartContext";
 import { MobileNavigation } from "./components/MobileNavigation";
@@ -41,8 +40,6 @@ const App = () => (
             <ScrollToTop />
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/hospital-dashboard" element={<HospitalDashboard />} />
               <Route path="/request" element={<Request />} />
               <Route path="/donate" element={<Donate />} />
               <Route path="/pharmacy" element={<Pharmacy />} />
