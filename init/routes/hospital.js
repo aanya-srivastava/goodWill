@@ -167,8 +167,13 @@ router.post('/:hospitalId/generate-otp/:requestId', verifyHospitalToken, async (
 });
 
 // Verify OTP and complete donation
-router.post('/:hospitalId/verify-otp/:requestId', async (req, res) => {
+router.post('/:hospitalId/verify-otp/:requestId', verifyHospitalToken, async (req, res) => {
   try {
+    // Ensure the hospital updating the resource matches the authenticated token
+    if (req.hospitalId !== req.params.hospitalId) {
+      return res.status(403).json({ error: 'Unauthorized access' });
+    }
+
     const { otp } = req.body;
     const donation = await db.collection('donationRequests').findOne({
       _id: new ObjectId(req.params.requestId),
