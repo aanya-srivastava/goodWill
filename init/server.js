@@ -37,33 +37,6 @@ async function connectToMongo() {
   }
 }
 
-// Get all hospitals (public route)
-app.get("/api/hospitals", async (req, res) => {
-  try {
-    const hospitals = await db.collection('hospitals').find({}, {
-      projection: {
-        name: 1,
-        bloodUnits: 1,
-        createdAt: 1,
-        updatedAt: 1
-      }
-    }).toArray();
-
-    const transformedHospitals = hospitals.map(hospital => ({
-      _id: hospital._id,
-      name: hospital.name,
-      bloodUnits: hospital.bloodUnits || {},
-      createdAt: hospital.createdAt,
-      updatedAt: hospital.updatedAt
-    }));
-
-    res.json(transformedHospitals);
-  } catch (error) {
-    console.error("Error fetching hospitals:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
 // Create donation request (public route)
 app.post("/api/hospitals/:hospitalId/donation-requests", async (req, res) => {
   try {
