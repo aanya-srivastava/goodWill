@@ -16,6 +16,7 @@ import { PointsProvider } from "./contexts/PointsContext";
 import { CartProvider } from "./contexts/CartContext";
 import { MobileNavigation } from "./components/MobileNavigation";
 import { useEffect } from "react";
+import DonorAvailabilityDashboard from "./pages/DonorAvailabilityDashboard";
 
 // Scroll to top component
 const ScrollToTop = () => {
@@ -48,6 +49,7 @@ const App = () => (
               <Route path="/pharmacy" element={<Pharmacy />} />
               <Route path="/redeem" element={<Redeem />} />
               <Route path="/history" element={<History />} />
+              <Route path="/availability-dashboard" element={<DonorAvailabilityDashboard />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
