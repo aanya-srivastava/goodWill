@@ -130,6 +130,28 @@ Participating in the IEEE Project of the Month program, we gained hands-on exper
 
 Pull requests are welcome. For major changes, please open an issue first to discuss your ideas.
 
+## 💖 Contributors
+
+Thanks to all the amazing people who contribute to **goodWill** 🚀
+
+<p align="center">
+  <a href="https://github.com/aanya-srivastava/goodWill/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=aanya-srivastava/goodWill" alt="Contributors"/>
+  </a>
+</p>
+
+## ⭐ Project Support
+
+<p align="center">
+  <a href="https://github.com/aanya-srivastava/goodWill/stargazers">
+    <img src="https://img.shields.io/github/stars/aanya-srivastava/goodWill?style=social" alt="Stars">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/aanya-srivastava/goodWill/network/members">
+    <img src="https://img.shields.io/github/forks/aanya-srivastava/goodWill?style=social" alt="Forks">
+  </a>
+</p>
+
 ##
 
 Made with ❤️ by the goodWill team.
