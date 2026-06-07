@@ -36,7 +36,7 @@ export const HeartbeatLoader = ({ onComplete, duration = 3000 }: HeartbeatLoader
   }, [duration, onComplete]);
   
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center bg-white z-50">
+    <div className="fixed inset-0 flex flex-col items-center justify-center bg-background z-50">
       <div className="relative">
         <Heart 
           className="heartbeat-animation text-blood h-24 w-24" 
@@ -53,8 +53,8 @@ export const HeartbeatLoader = ({ onComplete, duration = 3000 }: HeartbeatLoader
         </div>
       </div>
       <h1 className="text-3xl font-bold mt-8 text-blood tracking-wider">goodwill</h1>
-      <p className="text-gray-600 mt-2">Serving humanity one heart at a time</p>
-      <div className="mt-8 w-64 h-1 bg-gray-200 rounded-full overflow-hidden">
+      <p className="text-muted-foreground mt-2">Serving humanity one heart at a time</p>
+      <div className="mt-8 w-64 h-1 bg-muted rounded-full overflow-hidden">
         <div 
           className="h-full bg-blood transition-all duration-300 ease-out"
           style={{ width: `${progress}%` }}
