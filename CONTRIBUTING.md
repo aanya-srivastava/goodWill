@@ -255,6 +255,7 @@ New to open source or the MERN stack? Look for issues tagged **`good first issue
 *This guide is open to improvement too. If something is unclear or missing — feel free to open a PR or issue for it.*
 
 ---
+<div align="center">⭐️ If you are contributing to this project, please consider leaving a star to show your support!</div><br/>
 
 <div align="center">
 
