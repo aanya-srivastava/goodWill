@@ -100,7 +100,7 @@ const Index = () => {
     <>
       {showLoader && <HeartbeatLoader onComplete={handleLoaderComplete} />}
       
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-white via-white to-blood/5">
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-blood/5">
         <Header />
         
         <main className="flex-grow flex flex-col items-center justify-center p-6">
@@ -119,7 +119,7 @@ const Index = () => {
           {/* Stats Section */}
           <div className="w-full max-w-3xl mb-10">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-blood/10 transform hover:translate-y-[-5px] transition-all">
+              <div className="bg-card p-6 rounded-xl shadow-sm border border-blood/10 transform hover:translate-y-[-5px] transition-all">
                 <div className="flex justify-between items-start mb-4">
                   <div className="h-12 w-12 bg-[#FFDEE2] rounded-xl flex items-center justify-center">
                     <Droplet className="h-6 w-6 text-blood" />
@@ -129,10 +129,10 @@ const Index = () => {
                 <h3 className="text-3xl font-bold mb-1 animate-count-up">
                   {statsLoaded ? animatedDonations.toLocaleString() : '...'}
                 </h3>
-                <p className="text-sm text-gray-500">Blood donations</p>
+                <p className="text-sm text-muted-foreground">Blood donations</p>
               </div>
               
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-blood/10 transform hover:translate-y-[-5px] transition-all">
+              <div className="bg-card p-6 rounded-xl shadow-sm border border-blood/10 transform hover:translate-y-[-5px] transition-all">
                 <div className="flex justify-between items-start mb-4">
                   <div className="h-12 w-12 bg-[#D3E4FD] rounded-xl flex items-center justify-center">
                     <Users className="h-6 w-6 text-blue-500" />
@@ -142,10 +142,10 @@ const Index = () => {
                 <h3 className="text-3xl font-bold mb-1 animate-count-up">
                   {statsLoaded ? animatedUsers.toLocaleString() : '...'}
                 </h3>
-                <p className="text-sm text-gray-500">Active users</p>
+                <p className="text-sm text-muted-foreground">Active users</p>
               </div>
               
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-blood/10 transform hover:translate-y-[-5px] transition-all">
+              <div className="bg-card p-6 rounded-xl shadow-sm border border-blood/10 transform hover:translate-y-[-5px] transition-all">
                 <div className="flex justify-between items-start mb-4">
                   <div className="h-12 w-12 bg-[#F2FCE2] rounded-xl flex items-center justify-center">
                     <Heart className="h-6 w-6 text-green-500" />
@@ -155,7 +155,7 @@ const Index = () => {
                 <h3 className="text-3xl font-bold mb-1 animate-count-up">
                   {statsLoaded ? animatedRecipients.toLocaleString() : '...'}
                 </h3>
-                <p className="text-sm text-gray-500">Lives impacted</p>
+                <p className="text-sm text-muted-foreground">Lives impacted</p>
               </div>
             </div>
           </div>
@@ -163,7 +163,7 @@ const Index = () => {
           <div className="w-full max-w-3xl mb-16">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blood/10 via-blood/5 to-blood/10 rounded-2xl transform -rotate-1"></div>
-              <div className="relative bg-white p-6 rounded-2xl shadow-md border border-blood/10">
+              <div className="relative bg-card p-6 rounded-2xl shadow-md border border-blood/10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                   <div className="flex flex-col">
                     <h3 className="text-xl font-bold mb-2">Why Donate Blood?</h3>
@@ -201,7 +201,7 @@ const Index = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-slide-up">
-              <Link to="/request" className="flex flex-col items-center p-6 rounded-xl bg-gradient-to-br from-white to-blood/5 border border-blood/10 shadow-sm hover:shadow-md transition-all group">
+              <Link to="/request" className="flex flex-col items-center p-6 rounded-xl bg-gradient-to-br from-card to-blood/5 border border-blood/10 shadow-sm hover:shadow-md transition-all group">
                 <div className="h-16 w-16 rounded-full bg-blood/10 flex items-center justify-center mb-4 group-hover:bg-blood/20 transition-colors">
                   <Droplet className="h-8 w-8 text-blood" />
                 </div>
@@ -209,7 +209,7 @@ const Index = () => {
                 <p className="text-muted-foreground text-sm mt-2 text-center">Request blood when you or someone you know needs it</p>
               </Link>
               
-              <Link to="/donate" className="flex flex-col items-center p-6 rounded-xl bg-gradient-to-br from-white to-blood/5 border border-blood/10 shadow-sm hover:shadow-md transition-all group">
+              <Link to="/donate" className="flex flex-col items-center p-6 rounded-xl bg-gradient-to-br from-card to-blood/5 border border-blood/10 shadow-sm hover:shadow-md transition-all group">
                 <div className="h-16 w-16 rounded-full bg-blood/10 flex items-center justify-center mb-4 group-hover:bg-blood/20 transition-colors">
                   <PlusCircle className="h-8 w-8 text-blood" />
                 </div>
@@ -217,7 +217,7 @@ const Index = () => {
                 <p className="text-muted-foreground text-sm mt-2 text-center">Save lives by donating your blood to those in need</p>
               </Link>
               
-              <Link to="/pharmacy" className="flex flex-col items-center p-6 rounded-xl bg-gradient-to-br from-white to-blood/5 border border-blood/10 shadow-sm hover:shadow-md transition-all group">
+              <Link to="/pharmacy" className="flex flex-col items-center p-6 rounded-xl bg-gradient-to-br from-card to-blood/5 border border-blood/10 shadow-sm hover:shadow-md transition-all group">
                 <div className="h-16 w-16 rounded-full bg-blood/10 flex items-center justify-center mb-4 group-hover:bg-blood/20 transition-colors">
                   <Pill className="h-8 w-8 text-blood" />
                 </div>

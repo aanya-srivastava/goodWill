@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Coins, Heart, LogIn } from 'lucide-react';
+import ThemeSwitcher from './ThemeSwitcher';      // ✅ ADD
 import { PointsModal } from './PointsModal';
 import { usePoints } from '../contexts/PointsContext';
 import { Cart } from './Cart';
@@ -30,6 +31,7 @@ export const Header = () => {
           <LogIn className="h-5 w-5" />
           <span className="font-medium">Login</span>
         </Link>
+        <ThemeSwitcher />                          {/* ✅ ADD */}
         <button 
           onClick={() => setShowPointsModal(true)}
           className="flex items-center gap-2 px-4 py-2 rounded-full bg-blood/10 hover:bg-blood/20 transition-colors button-effect shadow-sm"

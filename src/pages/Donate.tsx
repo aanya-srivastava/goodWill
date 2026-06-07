@@ -6,7 +6,7 @@ import { Heart, Droplet, Award } from 'lucide-react';
 
 const Donate = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-red-50 via-white to-blood/10">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-blood/10">
       <Header />
       
       <main className="flex-grow flex flex-col items-center p-6">
@@ -23,9 +23,9 @@ const Donate = () => {
         </div>
         
         <div className="w-full max-w-3xl mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-md border border-blood/10">
+          <div className="bg-card rounded-xl p-6 shadow-md border border-blood/10">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              <div className="bg-red-50 rounded-xl p-4 flex flex-col items-center text-center">
+              <div className="bg-muted rounded-xl p-4 flex flex-col items-center text-center">
                 <div className="bg-blood rounded-full p-2 mb-3">
                   <Droplet className="h-6 w-6 text-white" />
                 </div>
@@ -33,7 +33,7 @@ const Donate = () => {
                 <p className="text-sm">Blood is needed every 2 seconds for surgeries, treatments, and emergencies.</p>
               </div>
               
-              <div className="bg-red-50 rounded-xl p-4 flex flex-col items-center text-center">
+              <div className="bg-muted rounded-xl p-4 flex flex-col items-center text-center">
                 <div className="bg-blood rounded-full p-2 mb-3">
                   <Heart className="h-6 w-6 text-white" />
                 </div>
@@ -41,7 +41,7 @@ const Donate = () => {
                 <p className="text-sm">Each donation can be separated into red cells, plasma and platelets to help multiple patients.</p>
               </div>
               
-              <div className="bg-red-50 rounded-xl p-4 flex flex-col items-center text-center">
+              <div className="bg-muted rounded-xl p-4 flex flex-col items-center text-center">
                 <div className="bg-blood rounded-full p-2 mb-3">
                   <Award className="h-6 w-6 text-white" />
                 </div>
@@ -86,7 +86,7 @@ const Donate = () => {
           </div>
         </div>
         
-        <div className="bg-white rounded-xl shadow-md border border-blood/10 p-8 w-full max-w-3xl">
+        <div className="bg-card rounded-xl shadow-md border border-blood/10 p-8 w-full max-w-3xl">
           <BloodDonationForm />
         </div>
       </main>

@@ -1,43 +1,163 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+
+  /* ════════════════════════════════
+     ☀️  LIGHT (default)
+  ════════════════════════════════ */
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
-
     --card: 0 0% 100%;
     --card-foreground: 222.2 47.4% 11.2%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 47.4% 11.2%;
-
     --primary: 355 78% 56%;
     --primary-foreground: 210 40% 98%;
-
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
-
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
-
     --radius: 1rem;
-  }
-}
 
-@layer base {
+    /* Custom theme-aware vars */
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --shimmer-light: #f6f7f8;
+    --shimmer-mid: #edeef1;
+  }
+
+  /* ════════════════════════════════
+     🌙  DARK
+  ════════════════════════════════ */
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+    --card: 224 71% 6%;
+    --card-foreground: 213 31% 91%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 213 31% 91%;
+    --primary: 355 78% 62%;        /* slightly lighter red for dark bg */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 222 47% 15%;
+    --secondary-foreground: 213 31% 91%;
+    --muted: 223 47% 11%;
+    --muted-foreground: 215 16% 60%;
+    --accent: 222 47% 15%;
+    --accent-foreground: 213 31% 91%;
+    --destructive: 0 63% 50%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+    --ring: 355 78% 62%;
+
+    --glass-bg: rgba(15, 23, 42, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --shimmer-light: #1e293b;
+    --shimmer-mid: #273548;
+  }
+
+  /* ════════════════════════════════
+     🔥  WARM / SUNSET
+  ════════════════════════════════ */
+  .theme-warm {
+    --background: 33 100% 97%;
+    --foreground: 20 60% 12%;
+    --card: 36 80% 94%;
+    --card-foreground: 20 60% 12%;
+    --popover: 36 80% 94%;
+    --popover-foreground: 20 60% 12%;
+    --primary: 22 90% 50%;         /* orange */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 70% 88%;
+    --secondary-foreground: 20 60% 18%;
+    --muted: 40 50% 90%;
+    --muted-foreground: 25 35% 42%;
+    --accent: 40 70% 88%;
+    --accent-foreground: 20 60% 18%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 35 55% 82%;
+    --input: 35 55% 82%;
+    --ring: 22 90% 50%;
+
+    --glass-bg: rgba(255, 247, 235, 0.88);
+    --glass-border: rgba(251, 191, 36, 0.25);
+    --shimmer-light: #fef3c7;
+    --shimmer-mid: #fde68a;
+  }
+
+  /* ════════════════════════════════
+     🌊  OCEAN
+  ════════════════════════════════ */
+  .theme-ocean {
+    --background: 204 80% 97%;
+    --foreground: 210 60% 10%;
+    --card: 200 60% 93%;
+    --card-foreground: 210 60% 10%;
+    --popover: 200 60% 93%;
+    --popover-foreground: 210 60% 10%;
+    --primary: 199 89% 42%;        /* deep sky */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 200 40% 86%;
+    --secondary-foreground: 210 60% 14%;
+    --muted: 200 40% 90%;
+    --muted-foreground: 210 25% 42%;
+    --accent: 200 40% 86%;
+    --accent-foreground: 210 60% 14%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 200 35% 82%;
+    --input: 200 35% 82%;
+    --ring: 199 89% 42%;
+
+    --glass-bg: rgba(240, 249, 255, 0.88);
+    --glass-border: rgba(14, 165, 233, 0.2);
+    --shimmer-light: #e0f2fe;
+    --shimmer-mid: #bae6fd;
+  }
+
+  /* ════════════════════════════════
+     ⬛  HIGH CONTRAST
+  ════════════════════════════════ */
+  .theme-contrast {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 48 96% 52%;         /* yellow — max visibility */
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 13%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 13%;
+    --muted-foreground: 48 96% 52%;
+    --accent: 0 0% 13%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 100% 60%;
+    --destructive-foreground: 0 0% 0%;
+    --border: 0 0% 100%;
+    --input: 0 0% 13%;
+    --ring: 48 96% 52%;
+
+    --glass-bg: rgba(0, 0, 0, 0.95);
+    --glass-border: rgba(255, 255, 255, 0.8);
+    --shimmer-light: #1a1a1a;
+    --shimmer-mid: #2a2a2a;
+  }
+
+  /* ─────────────────────────────── */
+
   * {
     @apply border-border;
   }
@@ -46,155 +166,112 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
 
+  /* Glass panel uses theme-aware CSS vars now */
   .glass-panel {
-    @apply bg-white/90 backdrop-blur-md border border-white/30 shadow-sm;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    @apply backdrop-blur-md shadow-sm;
   }
-  
+
   .button-effect {
     @apply transition-all duration-300 active:scale-95;
   }
-  
+
   .text-gradient {
     @apply bg-gradient-to-br from-foreground to-foreground/80 bg-clip-text;
   }
 }
 
+/* ════════════════════════════════
+   SHIMMER — theme-aware
+════════════════════════════════ */
 @keyframes shimmer {
-  0% {
-    background-position: -468px 0;
-  }
-  100% {
-    background-position: 468px 0;
-  }
+  0%   { background-position: -468px 0; }
+  100% { background-position:  468px 0; }
 }
 
 .shimmer {
   animation: shimmer 1.5s infinite linear;
-  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background: linear-gradient(
+    to right,
+    var(--shimmer-light) 8%,
+    var(--shimmer-mid)   18%,
+    var(--shimmer-light) 33%
+  );
   background-size: 800px 104px;
 }
 
-/* Page Transitions */
-.page-enter {
-  opacity: 0;
-  transform: translateY(10px);
-}
+/* ════════════════════════════════
+   PAGE TRANSITIONS
+════════════════════════════════ */
+.page-enter          { opacity: 0; transform: translateY(10px); }
+.page-enter-active   { opacity: 1; transform: translateY(0); transition: opacity 300ms, transform 300ms; }
+.page-exit           { opacity: 1; transform: translateY(0); }
+.page-exit-active    { opacity: 0; transform: translateY(-10px); transition: opacity 300ms, transform 300ms; }
 
-.page-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 300ms, transform 300ms;
-}
-
-.page-exit {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.page-exit-active {
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 300ms, transform 300ms;
-}
-
-/* Blood drop animation */
+/* ════════════════════════════════
+   ANIMATIONS
+════════════════════════════════ */
 @keyframes pulse-blood {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 1;
-  }
+  0%, 100% { transform: scale(1);   opacity: 0.8; }
+  50%       { transform: scale(1.1); opacity: 1;   }
 }
+.pulse-blood { animation: pulse-blood 2s infinite ease-in-out; }
 
-.pulse-blood {
-  animation: pulse-blood 2s infinite ease-in-out;
-}
-
-/* Heartbeat animation */
 @keyframes heartbeat {
-  0% { transform: scale(1); }
+  0%  { transform: scale(1);   }
   14% { transform: scale(1.3); }
-  28% { transform: scale(1); }
+  28% { transform: scale(1);   }
   42% { transform: scale(1.3); }
-  70% { transform: scale(1); }
+  70% { transform: scale(1);   }
 }
+.heartbeat-animation { animation: heartbeat 1.2s infinite; transform-origin: center; }
 
-.heartbeat-animation {
-  animation: heartbeat 1.2s infinite;
-  transform-origin: center;
-}
-
-/* Pulse wave animation for the heartbeat loader */
 @keyframes pulse-wave {
   0%, 100% { transform: scaleY(0.3); opacity: 0.5; }
-  50% { transform: scaleY(1); opacity: 1; }
+  50%       { transform: scaleY(1);   opacity: 1;   }
 }
+.animate-pulse-wave { animation: pulse-wave 0.8s infinite; transform-origin: center bottom; }
 
-.animate-pulse-wave {
-  animation: pulse-wave 0.8s infinite;
-  transform-origin: center bottom;
-}
-
-.delay-0 { animation-delay: 0ms; }
+.delay-0   { animation-delay: 0ms;   }
 .delay-100 { animation-delay: 100ms; }
 .delay-200 { animation-delay: 200ms; }
 .delay-300 { animation-delay: 300ms; }
 .delay-400 { animation-delay: 400ms; }
 
-/* Count up animation */
 @keyframes count-up {
   from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0);    }
 }
+.animate-count-up { animation: count-up 0.6s ease forwards; }
 
-.animate-count-up {
-  animation: count-up 0.6s ease forwards;
-}
-
-/* Custom blood section styles */
+/* ════════════════════════════════
+   BLOOD / BRAND — stays red across
+   all themes (intentional brand color)
+════════════════════════════════ */
 .blood-gradient {
   background: linear-gradient(135deg, #e63946 0%, #e5383b 100%);
 }
 
+/* These use hsl(var(--primary)) so they auto-theme */
 .info-card {
-  @apply bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all border border-blood/10 h-full;
+  @apply bg-card p-4 rounded-lg shadow-sm hover:shadow-md transition-all border border-border h-full;
 }
+.info-card-title { @apply font-bold text-lg mb-2 text-primary; }
+.blood-count     { @apply text-3xl font-bold text-primary; }
 
-.info-card-title {
-  @apply font-bold text-lg mb-2 text-blood;
-}
+/* ════════════════════════════════
+   MOBILE NAV
+════════════════════════════════ */
+.mobile-nav-item  { @apply flex flex-col items-center justify-center transition-colors duration-200; }
+.mobile-nav-icon  { @apply p-1 rounded-full transition-all duration-200; }
+.mobile-nav-label { @apply text-xs mt-1 font-medium; }
 
-.blood-count {
-  @apply text-3xl font-bold text-blood;
-}
-
-/* Mobile Navigation */
-.mobile-nav-item {
-  @apply flex flex-col items-center justify-center transition-colors duration-200;
-}
-
-.mobile-nav-icon {
-  @apply p-1 rounded-full transition-all duration-200;
-}
-
-.mobile-nav-label {
-  @apply text-xs mt-1 font-medium;
-}
-
-/* Confetti Animation */
+/* ════════════════════════════════
+   CONFETTI
+════════════════════════════════ */
 @keyframes confetti-fall {
-  0% {
-    transform: translateY(-100vh) rotate(0deg);
-  }
-  100% {
-    transform: translateY(100vh) rotate(360deg);
-  }
+  0%   { transform: translateY(-100vh) rotate(0deg);   }
+  100% { transform: translateY(100vh)  rotate(360deg); }
 }
-
-.confetti-particle {
-  position: absolute;
-  animation: confetti-fall 3s ease-in-out forwards;
-}
+.confetti-particle { position: absolute; animation: confetti-fall 3s ease-in-out forwards; }
