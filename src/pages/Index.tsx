@@ -195,12 +195,12 @@ const Index = () => {
             </div>
           </div>
 
-          <div className="w-full max-w-6xl">
+          <div className="w-full max-w-xl">
             <div className="text-center mb-8 animate-slide-up">
               <h2 className="text-2xl font-bold mb-8">How can we help you?</h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-slide-up">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-slide-up">
               <Link to="/request" className="flex flex-col items-center p-6 rounded-xl bg-gradient-to-br from-white to-blood/5 border border-blood/10 shadow-sm hover:shadow-md transition-all group">
                 <div className="h-16 w-16 rounded-full bg-blood/10 flex items-center justify-center mb-4 group-hover:bg-blood/20 transition-colors">
                   <Droplet className="h-8 w-8 text-blood" />
@@ -215,23 +215,6 @@ const Index = () => {
                 </div>
                 <h3 className="font-semibold text-lg">Donate Blood</h3>
                 <p className="text-muted-foreground text-sm mt-2 text-center">Save lives by donating your blood to those in need</p>
-              </Link>
-
-              <Link
-                to="/availability-dashboard"
-                className="flex flex-col items-center p-6 rounded-xl bg-gradient-to-br from-white to-blood/5 border border-blood/10 shadow-sm hover:shadow-md transition-all group"
-              >
-                <div className="h-16 w-16 rounded-full bg-blood/10 flex items-center justify-center mb-4 group-hover:bg-blood/20 transition-colors">
-                  <BarChart3 className="h-8 w-8 text-blood" />
-                </div>
-
-                <h3 className="font-semibold text-lg">
-                  Check Donor Availability
-                </h3>
-
-                <p className="text-muted-foreground text-sm mt-2 text-center">
-                  View real-time blood group availability and donor distribution statistics.
-                </p>
               </Link>
 
               <Link to="/pharmacy" className="flex flex-col items-center p-6 rounded-xl bg-gradient-to-br from-white to-blood/5 border border-blood/10 shadow-sm hover:shadow-md transition-all group">
