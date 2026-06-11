@@ -213,6 +213,18 @@ router.post('/:hospitalId/verify-otp/:requestId', verifyHospitalToken, async (re
       }
     );
 
+    // Update user reward points
+    try {
+      if (donation.userId) {
+        await db.collection('users').updateOne(
+          { _id: new ObjectId(donation.userId) },
+          { $inc: { rewardPoints: 15 * donation.units } }
+        );
+      }
+    } catch (err) {
+      console.warn("Could not update user points. Legacy userId format?", err);
+    }
+
     res.json({ success: true });
   } catch (error) {
     console.error('Error verifying donation:', error);
