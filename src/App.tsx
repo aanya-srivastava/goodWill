@@ -17,6 +17,7 @@ import { CartProvider } from "./contexts/CartContext";
 import { MobileNavigation } from "./components/MobileNavigation";
 import { useEffect } from "react";
 
+
 // Scroll to top component
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -48,6 +49,7 @@ const App = () => (
               <Route path="/pharmacy" element={<Pharmacy />} />
               <Route path="/redeem" element={<Redeem />} />
               <Route path="/history" element={<History />} />
+              
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

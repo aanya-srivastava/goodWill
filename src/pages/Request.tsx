@@ -4,6 +4,7 @@ import { Header } from '../components/Header';
 import { BloodRequestForm } from '../components/BloodRequestForm';
 import { Droplet, Heart, Clock } from 'lucide-react';
 import { MobileNavigation } from '../components/MobileNavigation';
+import DonorAvailabilityDashboard from '@/components/DonorAvailabilityDashboard';
 
 const Request = () => {
   // Scroll to top when page loads
@@ -63,7 +64,7 @@ const Request = () => {
             </div>
           </div>
         </div>
-        
+        <DonorAvailabilityDashboard/>
         <div className="bg-white rounded-xl shadow-md border border-blood/10 p-8 w-full max-w-3xl">
           <BloodRequestForm />
         </div>
