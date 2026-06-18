@@ -2,12 +2,13 @@
 import React, { useState } from 'react';
 import { DonorList } from './DonorList';
 import { toast } from '@/components/ui/use-toast';
-import { Calendar, MapPin, Loader, Droplet } from 'lucide-react';
+import { Calendar, MapPin, Loader, Droplet, Loader2 } from 'lucide-react';
 
 export const BloodRequestForm = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     patientName: '',
     age: '',
@@ -26,27 +27,33 @@ export const BloodRequestForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSearching(true);
+    setIsSubmitting(true);
     
-    // Save patient request to localStorage
-    const existingRequests = JSON.parse(localStorage.getItem('blood-requests') || '[]');
-    const updatedRequests = [...existingRequests, formData];
-    localStorage.setItem('blood-requests', JSON.stringify(updatedRequests));
-    
-    // Scroll to the top of the page
-    window.scrollTo(0, 0);
-    
-    // Simulate search delay
+    // Simulate submission delay
     setTimeout(() => {
-      setIsSearching(false);
-      setIsSubmitted(true);
+      // Save patient request to localStorage
+      const existingRequests = JSON.parse(localStorage.getItem('blood-requests') || '[]');
+      const updatedRequests = [...existingRequests, formData];
+      localStorage.setItem('blood-requests', JSON.stringify(updatedRequests));
       
-      toast({
-        title: "Request submitted",
-        description: "We're connecting you with compatible donors in your area.",
-        variant: "default",
-      });
-    }, 2000);
+      // Scroll to the top of the page
+      window.scrollTo(0, 0);
+      
+      setIsSubmitting(false);
+      setIsSearching(true);
+      
+      // Simulate search delay
+      setTimeout(() => {
+        setIsSearching(false);
+        setIsSubmitted(true);
+        
+        toast({
+          title: "Request submitted",
+          description: "We're connecting you with compatible donors in your area.",
+          variant: "default",
+        });
+      }, 2000);
+    }, 1500);
   };
 
   const getLocation = () => {
@@ -191,7 +198,8 @@ export const BloodRequestForm = () => {
                 required
                 value={formData.patientName}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all"
+                disabled={isSubmitting}
+                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Patient's full name"
               />
             </div>
@@ -209,7 +217,8 @@ export const BloodRequestForm = () => {
                 max="120"
                 value={formData.age}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all"
+                disabled={isSubmitting}
+                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Patient's age"
               />
             </div>
@@ -224,7 +233,8 @@ export const BloodRequestForm = () => {
                 required
                 value={formData.gender}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all"
+                disabled={isSubmitting}
+                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <option value="male">Male</option>
                 <option value="female">Female</option>
@@ -243,7 +253,8 @@ export const BloodRequestForm = () => {
                 required
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all"
+                disabled={isSubmitting}
+                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Contact number"
               />
             </div>
@@ -258,7 +269,8 @@ export const BloodRequestForm = () => {
                 required
                 value={formData.bloodGroup}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all"
+                disabled={isSubmitting}
+                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <option value="A+">A+</option>
                 <option value="A-">A-</option>
@@ -284,7 +296,8 @@ export const BloodRequestForm = () => {
                 min="1"
                 value={formData.amount}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all"
+                disabled={isSubmitting}
+                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Number of units needed"
               />
             </div>
@@ -300,7 +313,8 @@ export const BloodRequestForm = () => {
                 required
                 value={formData.hospital}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all"
+                disabled={isSubmitting}
+                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Name of hospital"
               />
             </div>
@@ -317,14 +331,15 @@ export const BloodRequestForm = () => {
                   required
                   value={formData.address}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Hospital or patient location"
                 />
                 <button 
                   type="button"
                   onClick={getLocation}
-                  className="px-3 py-2 bg-blood/20 hover:bg-blood/30 text-blood rounded-lg flex items-center justify-center transition-colors"
-                  disabled={isGettingLocation}
+                  className="px-3 py-2 bg-blood/20 hover:bg-blood/30 text-blood rounded-lg flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isSubmitting || isGettingLocation}
                   title="Use current location"
                 >
                   {isGettingLocation ? (
@@ -343,9 +358,17 @@ export const BloodRequestForm = () => {
           <div className="pt-4">
             <button
               type="submit"
-              className="w-full py-3 px-4 bg-blood text-white font-medium rounded-lg shadow-sm hover:bg-blood-dark transition-colors button-effect"
+              disabled={isSubmitting}
+              className="w-full py-3 px-4 bg-blood text-white font-medium rounded-lg shadow-sm hover:bg-blood-dark transition-colors button-effect disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Submit Request
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                "Submit Request"
+              )}
             </button>
           </div>
         </form>

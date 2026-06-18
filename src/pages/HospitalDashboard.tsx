@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Building2, LogOut, Droplet, Clock, CheckCircle2, XCircle } from 'lucide-react';
+import { Building2, LogOut, Droplet, Clock, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface BloodUnit {
   type: string;
@@ -32,6 +33,7 @@ export const HospitalDashboard = () => {
   const [pendingRequests, setPendingRequests] = useState<DonationRequest[]>([]);
   const [donationHistory, setDonationHistory] = useState<DonationHistory[]>([]);
   const [loading, setLoading] = useState(true);
+  const [generatingOtpId, setGeneratingOtpId] = useState<string | null>(null);
   const hospitalName = localStorage.getItem('hospitalName') || 'Hospital';
   const hospitalToken = localStorage.getItem('hospitalToken');
 
@@ -91,6 +93,7 @@ export const HospitalDashboard = () => {
   };
 
   const generateOTP = async (requestId: string) => {
+    setGeneratingOtpId(requestId);
     try {
       const hospitalId = localStorage.getItem('hospitalId');
       const response = await fetch(`http://localhost:8081/api/hospitals/${hospitalId}/generate-otp/${requestId}`, {
@@ -117,6 +120,8 @@ export const HospitalDashboard = () => {
         title: "Error",
         description: "Failed to generate OTP.",
       });
+    } finally {
+      setGeneratingOtpId(null);
     }
   };
 
@@ -129,8 +134,64 @@ export const HospitalDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-xl text-gray-600">Loading...</div>
+      <div className="min-h-screen bg-gray-50">
+        <nav className="bg-white shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between h-16 items-center">
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-6 w-6 rounded" />
+                <Skeleton className="h-6 w-48" />
+              </div>
+              <Skeleton className="h-9 w-24 rounded-md" />
+            </div>
+          </div>
+        </nav>
+        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div className="px-4 py-6 sm:px-0">
+            <Skeleton className="h-8 w-48 mb-4" />
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="bg-white p-4 rounded-lg shadow">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="h-5 w-5 rounded" />
+                      <Skeleton className="h-5 w-16" />
+                    </div>
+                    <Skeleton className="h-6 w-8" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <Skeleton className="h-8 w-48 mb-4" />
+            <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="px-4 py-4 border-b last:border-b-0">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Skeleton className="h-5 w-32 mb-1" />
+                      <Skeleton className="h-4 w-24 mb-1" />
+                      <Skeleton className="h-3 w-20" />
+                    </div>
+                    <Skeleton className="h-8 w-28 rounded-md" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <Skeleton className="h-8 w-48 mb-4" />
+            <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="px-4 py-4 border-b last:border-b-0">
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-5 w-5 rounded-full" />
+                    <Skeleton className="h-5 w-32" />
+                  </div>
+                  <Skeleton className="h-4 w-28 mt-1" />
+                  <Skeleton className="h-3 w-20 mt-1" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -205,9 +266,17 @@ export const HospitalDashboard = () => {
                         </div>
                         <button
                           onClick={() => generateOTP(request._id)}
-                          className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-blood hover:bg-blood-dark"
+                          disabled={generatingOtpId === request._id}
+                          className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-blood hover:bg-blood-dark disabled:opacity-50 disabled:cursor-not-allowed gap-1"
                         >
-                          Generate OTP
+                          {generatingOtpId === request._id ? (
+                            <>
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                              Generating...
+                            </>
+                          ) : (
+                            "Generate OTP"
+                          )}
                         </button>
                       </div>
                     </li>

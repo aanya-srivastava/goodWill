@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 
 interface Hospital {
   _id: string;
@@ -14,6 +14,7 @@ interface DonationConfirmationProps {
   units: number;
   onClose: () => void;
   onConfirm: (otp: string) => void;
+  isLoading?: boolean;
 }
 
 export const DonationConfirmation: React.FC<DonationConfirmationProps> = ({
@@ -21,6 +22,7 @@ export const DonationConfirmation: React.FC<DonationConfirmationProps> = ({
   units,
   onClose,
   onConfirm,
+  isLoading = false,
 }) => {
   const [otp, setOtp] = useState('');
 
@@ -72,14 +74,23 @@ export const DonationConfirmation: React.FC<DonationConfirmationProps> = ({
             <div className="flex gap-3">
               <button
                 type="submit"
-                className="flex-1 py-2 px-4 bg-blood text-white font-medium rounded-lg hover:bg-blood-dark transition-colors"
+                disabled={isLoading}
+                className="flex-1 py-2 px-4 bg-blood text-white font-medium rounded-lg hover:bg-blood-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Confirm Donation
+                {isLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Verifying...
+                  </>
+                ) : (
+                  "Confirm Donation"
+                )}
               </button>
               <button
                 type="button"
                 onClick={onClose}
-                className="py-2 px-4 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                disabled={isLoading}
+                className="py-2 px-4 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>

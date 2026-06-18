@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 
 interface Hospital {
   _id: string;
@@ -13,12 +13,14 @@ interface HospitalProfileProps {
   hospital: Hospital;
   onClose: () => void;
   onDonate: () => void;
+  isLoading?: boolean;
 }
 
 export const HospitalProfile: React.FC<HospitalProfileProps> = ({
   hospital,
   onClose,
   onDonate,
+  isLoading = false,
 }) => {
   const [units, setUnits] = useState(1);
 
@@ -69,13 +71,22 @@ export const HospitalProfile: React.FC<HospitalProfileProps> = ({
         <div className="flex gap-3">
           <button
             onClick={onDonate}
-            className="flex-1 py-2 px-4 bg-blood text-white font-medium rounded-lg hover:bg-blood-dark transition-colors"
+            disabled={isLoading}
+            className="flex-1 py-2 px-4 bg-blood text-white font-medium rounded-lg hover:bg-blood-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            Donate Blood
+            {isLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              "Donate Blood"
+            )}
           </button>
           <button
             onClick={onClose}
-            className="py-2 px-4 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+            disabled={isLoading}
+            className="py-2 px-4 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancel
           </button>
