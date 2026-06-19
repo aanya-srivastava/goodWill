@@ -155,3 +155,24 @@ Thanks to all the amazing people who contribute to **goodWill** üöÄ
 ##
 
 Made with ‚ù§Ô∏è by the goodWill team.
+
+## ?? Running Frontend Tests
+
+The frontend uses [Vitest](https://vitest.dev/) with React Testing Library.
+
+### Run all tests once:
+```bash
+npm run test:run
+```
+
+### Run in watch mode (re-runs on file change):
+```bash
+npm run test
+```
+
+### Test files are located in `src/tests/` and cover:
+- `Header` ó logo, navigation, points display
+- `HospitalList` ó list rendering, hospital detail view, back navigation
+- `DonationConfirmation` ó OTP input, form submission, cancel/close actions
+- `DonorList` ó donor rendering, localStorage integration, hospital navigation
+
