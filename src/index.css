@@ -38,10 +38,8 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-
+  
+  /* removed global styles to allow for more flexibility in component design */
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }

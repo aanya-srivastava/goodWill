@@ -1,7 +1,7 @@
 # goodWill 🩸
 
 ## Overview
-**goodWill** started with a simple goal—to make finding blood donors quick and hassle-free during emergencies. Our platform connects patients in urgent need of blood with registered donors, nearby blood banks, and hospitals through a real-time, location-based search system. Patients can enter their blood type and details to find matching resources quickly. Donors register their information, view a list of patients, and choose to donate. Upon donation, they receive confirmation and earn 15 reward points. Once they accumulate 100 points, they unlock perks like free health check-ups, encouraging regular participation. The solution creates an efficient, secure, and incentivized ecosystem that bridges the gap between donors and those in need, ensuring faster and more reliable access to life-saving blood.
+**goodWill** started with a simple goalâ€”to make finding blood donors quick and hassle-free duringÂ emergencies. Our platform connects patients in urgent need of blood with registered donors, nearby blood banks, and hospitals through a real-time, location-based search system. Patients can enter their blood type and details to find matching resources quickly. Donors register their information, view a list of patients, and choose to donate. Upon donation, they receive confirmation and earn 15 reward points. Once they accumulate 100 points, they unlock perks like free health check-ups, encouraging regular participation. The solution creates an efficient, secure, and incentivized ecosystem that bridges the gap between donors and those in need, ensuring faster and more reliable access to life-savingÂ blood.
 
 ## 🚀 Features
 
@@ -24,7 +24,7 @@ We developed goodWill with the goal of simplifying blood donation by connecting 
 
 - Created a backend with Express.js and MongoDB including RESTful APIs.
 
-### 🧠 Challenges & Solutions
+### 🧠  Challenges & Solutions
 - State management issues: Resolved with proper component structuring and prop handling.
 
   API errors: Fixed via Express middleware and response validation.
@@ -58,7 +58,6 @@ goodWill-main/
 └── README.md             # This file
 ```
 
----
 
 ## ⚙️ Setup Instructions
 
@@ -102,14 +101,10 @@ npm run dev
 
 Visit the app in your browser at: `http://localhost:5173`
 
----
-
 ## 📦 API Overview
 
 - `GET /hospital/available`: Fetches hospitals sorted by blood type availability
 - `POST /hospital/update`: Updates hospital blood inventory upon donation
-
----
 
 ## 🧪 Seed Data
 
@@ -121,6 +116,26 @@ node seed-hospital.js
 ```
 
 This creates mock hospital records with varying blood inventories.
+
+## 🧪 Running Frontend Tests
+
+The frontend uses [Vitest](https://vitest.dev/) with React Testing Library.
+
+### Run all tests once:
+```bash
+npm run test:run
+```
+
+### Run in watch mode (re-runs on file change):
+```bash
+npm run test
+```
+
+### Test files are located in `src/tests/` and cover:
+- `Header` — logo, navigation, points display
+- `HospitalList` — list rendering, hospital detail view, back navigation
+- `DonationConfirmation` — OTP input, form submission, cancel/close actions
+- `DonorList` — donor rendering, localStorage integration, hospital navigation
 
 ## 🧠 What We Learned
 
@@ -155,3 +170,4 @@ Thanks to all the amazing people who contribute to **goodWill** 🚀
 ##
 
 Made with ❤️ by the goodWill team.
+
