@@ -109,8 +109,6 @@ The actual donation usually takes around 8–10 minutes, while the complete proc
 
 </details>
 
-</details>
-
 <details>
 <summary>How many lives can one donation help?</summary>
 
