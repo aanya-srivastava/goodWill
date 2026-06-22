@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Pill, 
   Thermometer, 
@@ -8,11 +8,13 @@ import {
   Heart, 
   Stethoscope, 
   Syringe, 
-  ShoppingCart 
+  ShoppingCart,
+  Loader2 
 } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useCart } from '../contexts/CartContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface Product {
   id: number;
@@ -26,6 +28,8 @@ interface Product {
 
 export const PharmacyProducts = () => {
   const { addToCart } = useCart();
+  const { toast } = useToast();
+  const [addingId, setAddingId] = useState<number | null>(null);
   
   const products: Product[] = [
     {
@@ -113,7 +117,16 @@ export const PharmacyProducts = () => {
 
   const handleAddToCart = (product: Product) => {
     const { id, name, price, points } = product;
-    addToCart({ id, name, price, points });
+    setAddingId(id);
+    
+    setTimeout(() => {
+      addToCart({ id, name, price, points });
+      setAddingId(null);
+      toast({
+        title: "Added to cart",
+        description: `${name} has been added to your cart.`,
+      });
+    }, 800);
   };
 
   const categoryColors: Record<string, string> = {
@@ -148,9 +161,19 @@ export const PharmacyProducts = () => {
             <CardFooter>
               <Button 
                 onClick={() => handleAddToCart(product)} 
-                className="w-full bg-blood hover:bg-blood/90"
+                disabled={addingId === product.id}
+                className="w-full bg-blood hover:bg-blood/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+                {addingId === product.id ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Adding...
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="h-4 w-4" /> Add to Cart
+                  </>
+                )}
               </Button>
             </CardFooter>
           </Card>

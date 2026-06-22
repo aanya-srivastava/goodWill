@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Header } from '../components/Header';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Pill, Thermometer, Droplet, Bandage, Heart, Stethoscope, Syringe, Gift, Award, AlertTriangle } from 'lucide-react';
+import { Pill, Thermometer, Droplet, Bandage, Heart, Stethoscope, Syringe, Gift, Award, AlertTriangle, Loader2 } from 'lucide-react';
 import { usePoints } from '../contexts/PointsContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -178,10 +178,10 @@ const Redeem = () => {
                 <CardFooter>
                   <Button 
                     onClick={() => handleRedeem(item)} 
-                    className="w-full bg-blood hover:bg-blood/90"
+                    className="w-full bg-blood hover:bg-blood/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     disabled={points < item.points || isProcessing}
                   >
-                    <Gift className="mr-2 h-4 w-4" /> 
+                    <Gift className="h-4 w-4" /> 
                     {points < item.points ? "Insufficient Points" : "Redeem Now"}
                   </Button>
                 </CardFooter>
@@ -251,14 +251,23 @@ const Redeem = () => {
                 variant="outline" 
                 className="flex-1"
                 onClick={() => setShowConfirmation(false)}
+                disabled={isProcessing}
               >
                 Cancel
               </Button>
               <Button 
-                className="flex-1 bg-blood hover:bg-blood/90"
+                className="flex-1 bg-blood hover:bg-blood/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 onClick={confirmRedeem}
+                disabled={isProcessing}
               >
-                Confirm Redemption
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  "Confirm Redemption"
+                )}
               </Button>
             </div>
           </div>

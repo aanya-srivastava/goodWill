@@ -7,7 +7,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon, MapPin } from 'lucide-react';
+import { Calendar as CalendarIcon, MapPin, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface DonorData {
@@ -25,6 +25,7 @@ export const BloodDonationForm = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [formData, setFormData] = useState<DonorData>({
     donorName: '',
@@ -115,18 +116,24 @@ export const BloodDonationForm = () => {
       return;
     }
     
-    // Save donor data to localStorage
-    const existingDonors = JSON.parse(localStorage.getItem('blood-donors') || '[]');
-    const updatedDonors = [...existingDonors, formData];
-    localStorage.setItem('blood-donors', JSON.stringify(updatedDonors));
+    setIsSubmitting(true);
     
-    toast({
-      title: "Thank you for registering!",
-      description: "Your information has been saved. You may be contacted when someone needs your blood type.",
-      variant: "default",
-    });
-    
-    setIsSubmitted(true);
+    // Simulate network delay
+    setTimeout(() => {
+      // Save donor data to localStorage
+      const existingDonors = JSON.parse(localStorage.getItem('blood-donors') || '[]');
+      const updatedDonors = [...existingDonors, formData];
+      localStorage.setItem('blood-donors', JSON.stringify(updatedDonors));
+      
+      toast({
+        title: "Thank you for registering!",
+        description: "Your information has been saved. You may be contacted when someone needs your blood type.",
+        variant: "default",
+      });
+      
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+    }, 1500);
   };
 
   if (isSubmitted) {
@@ -153,7 +160,8 @@ export const BloodDonationForm = () => {
               required
               value={formData.donorName}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all"
+              disabled={isSubmitting || loading}
+              className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               placeholder="Your full name"
             />
           </div>
@@ -169,7 +177,8 @@ export const BloodDonationForm = () => {
               required
               value={formData.age}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all"
+              disabled={isSubmitting || loading}
+              className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               placeholder="Must be 16-65"
             />
             <p className="text-xs text-muted-foreground">Must be between 16 and 65 years old</p>
@@ -185,7 +194,8 @@ export const BloodDonationForm = () => {
               required
               value={formData.gender}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all"
+              disabled={isSubmitting || loading}
+              className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <option value="male">Male</option>
               <option value="female">Female</option>
@@ -204,7 +214,8 @@ export const BloodDonationForm = () => {
               required
               value={formData.phone}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all"
+              disabled={isSubmitting || loading}
+              className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               placeholder="We'll contact you here"
             />
           </div>
@@ -219,7 +230,8 @@ export const BloodDonationForm = () => {
               required
               value={formData.bloodGroup}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all"
+              disabled={isSubmitting || loading}
+              className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <option value="A+">A+</option>
               <option value="A-">A-</option>
@@ -242,7 +254,8 @@ export const BloodDonationForm = () => {
               required
               value={formData.recentlyDonated}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all"
+              disabled={isSubmitting || loading}
+              className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <option value="no">No</option>
               <option value="yes">Yes</option>
@@ -257,8 +270,9 @@ export const BloodDonationForm = () => {
               <PopoverTrigger asChild>
                 <Button
                   variant={"outline"}
+                  disabled={isSubmitting || loading}
                   className={cn(
-                    "w-full px-4 py-2 rounded-lg border justify-start text-left font-normal",
+                    "w-full px-4 py-2 rounded-lg border justify-start text-left font-normal disabled:opacity-50 disabled:cursor-not-allowed",
                     !date && "text-muted-foreground"
                   )}
                 >
@@ -291,15 +305,16 @@ export const BloodDonationForm = () => {
                 required
                 value={formData.address}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all"
+                disabled={isSubmitting || loading}
+                className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Your current location"
               />
               <Button 
                 type="button" 
                 onClick={getCurrentLocation} 
                 variant="outline"
-                className="px-3 py-2 bg-blood/20 hover:bg-blood/30 text-blood rounded-lg flex items-center justify-center transition-colors"
-                disabled={loading}
+                className="px-3 py-2 bg-blood/20 hover:bg-blood/30 text-blood rounded-lg flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isSubmitting || loading}
               >
                 <MapPin className="h-4 w-4 mr-2" />
                 {loading ? "Detecting..." : "Get Location"}
@@ -311,9 +326,17 @@ export const BloodDonationForm = () => {
         <div className="pt-4">
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-blood text-white font-medium rounded-lg shadow-sm hover:bg-blood-dark transition-colors button-effect"
+            disabled={isSubmitting || loading}
+            className="w-full py-3 px-4 bg-blood text-white font-medium rounded-lg shadow-sm hover:bg-blood-dark transition-colors button-effect disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            Register as Donor
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Registering...
+              </>
+            ) : (
+              "Register as Donor"
+            )}
           </button>
         </div>
       </form>

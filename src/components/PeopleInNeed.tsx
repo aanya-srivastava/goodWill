@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Heart } from "lucide-react";
+import { Heart, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { usePoints } from "../contexts/PointsContext";
 import { HospitalProfile } from "@/components/HospitalProfile";
 import { DonationConfirmation } from "@/components/DonationConfirmation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Hospital {
   _id: string;
@@ -36,6 +37,8 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
   const [selectedHospital, setSelectedHospital] = useState<Hospital | null>(null);
   const [showOtpConfirmation, setShowOtpConfirmation] = useState(false);
   const [currentRequest, setCurrentRequest] = useState<DonationRequest | null>(null);
+  const [isCreatingRequest, setIsCreatingRequest] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -65,6 +68,7 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
   };
 
   const createDonationRequest = async (hospital: Hospital) => {
+    setIsCreatingRequest(true);
     try {
       const response = await fetch(`http://localhost:8081/api/hospitals/${hospital._id}/donation-requests`, {
         method: 'POST',
@@ -99,11 +103,14 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
         title: "Error",
         description: "Failed to create donation request. Please try again.",
       });
+    } finally {
+      setIsCreatingRequest(false);
     }
   };
 
   const handleDonate = async (otp: string) => {
     if (!selectedHospital || !currentRequest) return;
+    setIsVerifyingOtp(true);
 
     try {
       const response = await fetch(
@@ -139,6 +146,8 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
         title: "Error",
         description: "Invalid OTP. Please try again.",
       });
+    } finally {
+      setIsVerifyingOtp(false);
     }
   };
 
@@ -158,9 +167,23 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
 
   if (loading) {
     return (
-      <div className="w-full max-w-2xl mx-auto py-16 text-center animate-fade-in">
-        <h2 className="text-2xl font-bold mb-2 text-blood">Loading...</h2>
-        <p className="text-muted-foreground">Fetching hospitals in need...</p>
+      <div className="w-full max-w-2xl mx-auto py-8 animate-fade-in">
+        <div className="text-center mb-8">
+          <Skeleton className="h-8 w-48 mx-auto mb-2" />
+          <Skeleton className="h-5 w-64 mx-auto" />
+        </div>
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="p-4 bg-white rounded-xl border shadow-sm">
+              <Skeleton className="h-5 w-40 mb-2" />
+              <div className="space-y-1 mt-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+              <Skeleton className="h-4 w-32 mt-3" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -226,6 +249,7 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
           hospital={selectedHospital}
           onClose={handleProfileClose}
           onDonate={handleProfileDonate}
+          isLoading={isCreatingRequest}
         />
       )}
 
@@ -238,6 +262,7 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
             setCurrentRequest(null);
           }}
           onConfirm={handleDonate}
+          isLoading={isVerifyingOtp}
         />
       )}
     </div>
