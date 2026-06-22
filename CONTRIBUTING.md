@@ -97,6 +97,17 @@ npm run dev
 
 The app will be available at `http://localhost:5173`.
 
+#### Set up Git Hooks (Husky)
+
+After cloning and installing dependencies, husky will automatically set up git hooks to validate your commits:
+
+```bash
+npm install
+npm run prepare  # Explicitly run if needed
+```
+
+This enables commit message linting via **commitlint**. Invalid commit messages will be rejected with a helpful error message.
+
 #### Keep your fork up to date before starting any new work:
 
 ```bash
@@ -181,7 +192,12 @@ Follow the [Conventional Commits](https://www.conventionalcommits.org/) standard
 <type>(<optional scope>): <short description>
 ```
 
-**Examples for goodWill:**
+**Commit message format:**
+- **Type**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `ci`, `revert`
+- **Scope** (optional): Area of code affected (e.g., `api`, `ui`, `database`)
+- **Subject**: Imperative mood, lowercase, no period. Under 72 characters
+
+**Good commit examples:**
 ```text
 feat(rewards): add 15-point reward on successful donation
 fix(api): handle null blood type in /hospital/available response
@@ -189,12 +205,29 @@ docs: add setup instructions to CONTRIBUTING.md
 chore(deps): upgrade mongoose to latest version
 refactor(backend): split hospital routes into separate router file
 style(ui): fix donor card overflow on small screens
+test(donation): add tests for blood availability filtering
+perf(search): optimize hospital query with database index
 ```
 
-**Rules:**
-- Use **imperative mood** — "add", not "added" or "adds"
-- Keep the subject line under **72 characters**
-- Reference related issues at the bottom: `Closes #5` or `Fixes #12`
+**Bad commit examples (will be rejected):**
+```text
+Added new feature                           # Missing type
+feat: Added reward system                   # Not imperative mood
+Fix some bugs                               # Too vague
+feat(rewards):Add points                    # Missing space
+feat(rewards): added 15-point reward on successful donation when donors complete a blood test # Too long
+feat: This is a very long commit message that exceeds the 72 character limit and should be shortened
+FEAT(rewards): add new feature              # Wrong case
+feat(rewards). add 15-point reward          # Wrong punctuation
+```
+
+**Commit message body (optional):**
+- Reference related issues: `Closes #5` or `Fixes #12`
+- Explain why the change was made, not what changed
+- Wrap at 72 characters
+
+**Automatic validation:**
+Commit messages are validated automatically using [commitlint](https://commitlint.js.org/). Invalid messages will be rejected during commit, and you'll see an error message telling you what needs to be fixed.
 
 ---
 
