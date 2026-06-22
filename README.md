@@ -1,7 +1,7 @@
 # goodWill 🩸
 
 ## Overview
-**goodWill** started with a simple goalâ€”to make finding blood donors quick and hassle-free duringÂ emergencies. Our platform connects patients in urgent need of blood with registered donors, nearby blood banks, and hospitals through a real-time, location-based search system. Patients can enter their blood type and details to find matching resources quickly. Donors register their information, view a list of patients, and choose to donate. Upon donation, they receive confirmation and earn 15 reward points. Once they accumulate 100 points, they unlock perks like free health check-ups, encouraging regular participation. The solution creates an efficient, secure, and incentivized ecosystem that bridges the gap between donors and those in need, ensuring faster and more reliable access to life-savingÂ blood.
+**goodWill** started with a simple goal - to make finding blood donors quick and hassle-free during emergencies. Our platform connects patients in urgent need of blood with registered donors, nearby blood banks and hospitals through a real-time, location-based search system. Patients can enter their blood type and details to find matching resources quickly. Donors register their information, view a list of patients and choose to donate. Upon donation, they receive confirmation and earn 15 reward points. Once they accumulate 100 points, they unlock perks like free health check-ups, encouraging regular participation. The solution creates an efficient, secure and incentivized ecosystem that bridges the gap between donors and those in need, ensuring faster and more reliable access to life-saving blood.
 
 ## 🚀 Features
 
@@ -27,7 +27,7 @@ We developed goodWill with the goal of simplifying blood donation by connecting 
 ### 🧠  Challenges & Solutions
 - State management issues: Resolved with proper component structuring and prop handling.
 
-  API errors: Fixed via Express middleware and response validation.
+- API errors: Fixed via Express middleware and response validation.
 
 - Database schema complexity: Refined our Mongoose models for clarity and flexibility.
 
@@ -136,10 +136,6 @@ npm run test
 - `HospitalList` — list rendering, hospital detail view, back navigation
 - `DonationConfirmation` — OTP input, form submission, cancel/close actions
 - `DonorList` — donor rendering, localStorage integration, hospital navigation
-
-## 🧠 What We Learned
-
-Participating in the IEEE Project of the Month program, we gained hands-on experience with full-stack web development using the MERN stack. We improved our skills in building REST APIs, designing intuitive user interfaces, and managing real-time data using MongoDB. We also learned how to work effectively as a team using Git and GitHub, and apply clean code principles throughout the project.
 
 ## 👨‍💻 Contributing
 
