@@ -4,6 +4,7 @@ import { MongoClient, ObjectId } from "mongodb";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import hospitalRoutes from './routes/hospital.js';
+import userRoutes from './routes/user.js';
 
 const app = express();
 const PORT = 8081;
@@ -61,6 +62,9 @@ app.post("/api/hospitals/:hospitalId/donation-requests", async (req, res) => {
 
 // Mount hospital routes (protected routes)
 app.use('/api/hospitals', hospitalRoutes);
+
+// Mount user routes
+app.use('/api/users', userRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

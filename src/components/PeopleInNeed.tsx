@@ -23,13 +23,11 @@ interface DonationRequest {
 
 interface PeopleInNeedProps {
   donorBloodGroup: string;
-  userName: string;
-  userId: string;
 }
 
-export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, userName, userId }) => {
+export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup }) => {
   const { toast } = useToast();
-  const { addPoints } = usePoints();
+  const { addPoints, syncPoints } = usePoints();
   const [donatedTo, setDonatedTo] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
@@ -70,14 +68,26 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
   const createDonationRequest = async (hospital: Hospital) => {
     setIsCreatingRequest(true);
     try {
+      const currentUserId = localStorage.getItem('userId');
+      const currentUserName = localStorage.getItem('userName');
+      
+      if (!currentUserId || !currentUserName) {
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to make a donation.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const response = await fetch(`http://localhost:8081/api/hospitals/${hospital._id}/donation-requests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId,
-          userName,
+          userId: currentUserId,
+          userName: currentUserName,
           units: donationUnits,
           bloodType: donorBloodGroup,
           status: 'pending',
@@ -129,8 +139,14 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
       }
 
       setDonatedTo(selectedHospital._id);
+      
+      // Sync points from the backend
+      await syncPoints();
+      
+      // Trigger confetti visually
+      addPoints(0.0001);
+      
       const pointsEarned = 15 * donationUnits;
-      addPoints(pointsEarned);
       toast({
         title: "Congratulations!",
         description: `You've earned ${pointsEarned} points for your donation of ${donationUnits} units.`,

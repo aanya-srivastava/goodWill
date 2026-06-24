@@ -23,13 +23,30 @@ export const Header = () => {
       </Link>
       
       <div className="flex items-center gap-4">
-        <Link 
-          to="/login"
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-blood text-white hover:bg-blood-dark transition-colors button-effect shadow-sm"
-        >
-          <LogIn className="h-5 w-5" />
-          <span className="font-medium">Login</span>
-        </Link>
+        {localStorage.getItem('userToken') || localStorage.getItem('hospitalToken') ? (
+          <button 
+            onClick={() => {
+              localStorage.removeItem('userToken');
+              localStorage.removeItem('hospitalToken');
+              localStorage.removeItem('userId');
+              localStorage.removeItem('userName');
+              localStorage.removeItem('hospitalId');
+              localStorage.removeItem('hospitalName');
+              window.location.href = '/';
+            }}
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors button-effect shadow-sm"
+          >
+            <span className="font-medium">Logout</span>
+          </button>
+        ) : (
+          <Link 
+            to="/login"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-blood text-white hover:bg-blood-dark transition-colors button-effect shadow-sm"
+          >
+            <LogIn className="h-5 w-5" />
+            <span className="font-medium">Login</span>
+          </Link>
+        )}
         <button 
           onClick={() => setShowPointsModal(true)}
           className="flex items-center gap-2 px-4 py-2 rounded-full bg-blood/10 hover:bg-blood/20 transition-colors button-effect shadow-sm"
