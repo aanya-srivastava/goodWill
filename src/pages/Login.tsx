@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Building2, User, ArrowRight } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { API_URL } from '../config';
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export const Login = () => {
   const handleHospitalLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8081/api/hospitals/login', {
+      const response = await fetch(`${API_URL}/api/hospitals/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

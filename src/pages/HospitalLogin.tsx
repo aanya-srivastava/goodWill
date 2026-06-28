@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Building2, Lock } from 'lucide-react';
+import { Building2, Lock, Loader2 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { useMutation } from '@tanstack/react-query';
+import { API_URL } from '../config';
 
 export const HospitalLogin = () => {
   const { toast } = useToast();
@@ -9,10 +11,9 @@ export const HospitalLogin = () => {
     password: '',
   });
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:8081/api/hospitals/login', {
+  const loginMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(`${API_URL}/api/hospitals/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -24,18 +25,26 @@ export const HospitalLogin = () => {
         throw new Error('Login failed');
       }
 
-      const data = await response.json();
+      return response.json();
+    },
+    onSuccess: (data) => {
       localStorage.setItem('hospitalToken', data.token);
       localStorage.setItem('hospitalId', data.hospitalId);
       localStorage.setItem('hospitalName', data.name);
       
       window.location.href = '/hospital-dashboard';
-    } catch (error) {
+    },
+    onError: () => {
       toast({
         title: "Error",
         description: "Invalid credentials. Please try again.",
       });
-    }
+    },
+  });
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    loginMutation.mutate();
   };
 
   return (
@@ -95,12 +104,22 @@ export const HospitalLogin = () => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blood hover:bg-blood-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blood"
+              disabled={loginMutation.isPending}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blood hover:bg-blood-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blood disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                <Lock className="h-5 w-5 text-blood-dark group-hover:text-blood" />
-              </span>
-              Sign in
+              {loginMutation.isPending ? (
+                <>
+                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                <>
+                  <span className="absolute left-0 inset-y-0 flex items-center pl-3">
+                    <Lock className="h-5 w-5 text-blood-dark group-hover:text-blood" />
+                  </span>
+                  Sign in
+                </>
+              )}
             </button>
           </div>
         </form>

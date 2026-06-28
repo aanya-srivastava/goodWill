@@ -5,6 +5,8 @@ import { usePoints } from "../contexts/PointsContext";
 import { HospitalProfile } from "@/components/HospitalProfile";
 import { DonationConfirmation } from "@/components/DonationConfirmation";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { API_URL } from "../config";
 
 interface Hospital {
   _id: string;
@@ -30,47 +32,43 @@ interface PeopleInNeedProps {
 export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, userName, userId }) => {
   const { toast } = useToast();
   const { addPoints } = usePoints();
+  const queryClient = useQueryClient();
   const [donatedTo, setDonatedTo] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [donationUnits, setDonationUnits] = useState<number>(1);
   const [selectedHospital, setSelectedHospital] = useState<Hospital | null>(null);
   const [showOtpConfirmation, setShowOtpConfirmation] = useState(false);
   const [currentRequest, setCurrentRequest] = useState<DonationRequest | null>(null);
-  const [isCreatingRequest, setIsCreatingRequest] = useState(false);
-  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetchHospitals();
   }, [donorBloodGroup]);
 
-  const fetchHospitals = () => {
-    fetch("http://localhost:8081/api/hospitals")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch hospitals.");
-        }
-        return response.json();
-      })
-      .then((data: Hospital[]) => {
-        setHospitals(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching hospitals:", error);
-        setLoading(false);
-        toast({
-          title: "Error",
-          description: "Failed to fetch hospitals. Please try again.",
-        });
-      });
-  };
+  // Query
+  const { data: hospitals = [], isLoading: loading, error: queryError } = useQuery<Hospital[]>({
+    queryKey: ['hospitals'],
+    queryFn: async () => {
+      const response = await fetch(`${API_URL}/api/hospitals`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch hospitals.");
+      }
+      return response.json();
+    },
+  });
 
-  const createDonationRequest = async (hospital: Hospital) => {
-    setIsCreatingRequest(true);
-    try {
-      const response = await fetch(`http://localhost:8081/api/hospitals/${hospital._id}/donation-requests`, {
+  useEffect(() => {
+    if (queryError) {
+      console.error("Error fetching hospitals:", queryError);
+      toast({
+        title: "Error",
+        description: "Failed to fetch hospitals. Please try again.",
+      });
+    }
+  }, [queryError, toast]);
+
+  // Mutations
+  const createDonationRequestMutation = useMutation({
+    mutationFn: async (hospital: Hospital) => {
+      const response = await fetch(`${API_URL}/api/hospitals/${hospital._id}/donation-requests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,7 +87,9 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
         throw new Error('Failed to create donation request');
       }
 
-      const data = await response.json();
+      return response.json();
+    },
+    onSuccess: (data) => {
       setCurrentRequest(data);
       setShowOtpConfirmation(true);
       
@@ -97,24 +97,21 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
         title: "Request Created",
         description: "Please ask the hospital staff to generate an OTP for your donation.",
       });
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error('Error creating donation request:', error);
       toast({
         title: "Error",
         description: "Failed to create donation request. Please try again.",
       });
-    } finally {
-      setIsCreatingRequest(false);
-    }
-  };
+    },
+  });
 
-  const handleDonate = async (otp: string) => {
-    if (!selectedHospital || !currentRequest) return;
-    setIsVerifyingOtp(true);
-
-    try {
+  const handleDonateMutation = useMutation({
+    mutationFn: async (otp: string) => {
+      if (!selectedHospital || !currentRequest) return;
       const response = await fetch(
-        `http://localhost:8081/api/hospitals/${selectedHospital._id}/verify-otp/${currentRequest._id}`,
+        `${API_URL}/api/hospitals/${selectedHospital._id}/verify-otp/${currentRequest._id}`,
         {
           method: 'POST',
           headers: {
@@ -128,6 +125,10 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
         throw new Error('Invalid OTP');
       }
 
+      return response.json();
+    },
+    onSuccess: () => {
+      if (!selectedHospital) return;
       setDonatedTo(selectedHospital._id);
       const pointsEarned = 15 * donationUnits;
       addPoints(pointsEarned);
@@ -136,20 +137,21 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
         description: `You've earned ${pointsEarned} points for your donation of ${donationUnits} units.`,
       });
       
-      fetchHospitals();
+      // Invalidate the hospital query to refresh the inventory
+      queryClient.invalidateQueries({ queryKey: ['hospitals'] });
+      
       setSelectedHospital(null);
       setShowOtpConfirmation(false);
       setCurrentRequest(null);
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error('Error verifying donation:', error);
       toast({
         title: "Error",
         description: "Invalid OTP. Please try again.",
       });
-    } finally {
-      setIsVerifyingOtp(false);
-    }
-  };
+    },
+  });
 
   const handleHospitalClick = (hospital: Hospital) => {
     setSelectedHospital(hospital);
@@ -161,9 +163,10 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
 
   const handleProfileDonate = () => {
     if (selectedHospital) {
-      createDonationRequest(selectedHospital);
+      createDonationRequestMutation.mutate(selectedHospital);
     }
   };
+
 
   if (loading) {
     return (
@@ -249,7 +252,7 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
           hospital={selectedHospital}
           onClose={handleProfileClose}
           onDonate={handleProfileDonate}
-          isLoading={isCreatingRequest}
+          isLoading={createDonationRequestMutation.isPending}
         />
       )}
 
@@ -261,8 +264,8 @@ export const PeopleInNeed: React.FC<PeopleInNeedProps> = ({ donorBloodGroup, use
             setShowOtpConfirmation(false);
             setCurrentRequest(null);
           }}
-          onConfirm={handleDonate}
-          isLoading={isVerifyingOtp}
+          onConfirm={(otp) => handleDonateMutation.mutate(otp)}
+          isLoading={handleDonateMutation.isPending}
         />
       )}
     </div>

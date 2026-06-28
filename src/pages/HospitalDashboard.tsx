@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Building2, LogOut, Droplet, Clock, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { API_URL } from '../config';
 
 interface BloodUnit {
   type: string;
@@ -29,74 +31,79 @@ interface DonationHistory {
 export const HospitalDashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [bloodInventory, setBloodInventory] = useState<BloodUnit[]>([]);
-  const [pendingRequests, setPendingRequests] = useState<DonationRequest[]>([]);
-  const [donationHistory, setDonationHistory] = useState<DonationHistory[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [generatingOtpId, setGeneratingOtpId] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   const hospitalName = localStorage.getItem('hospitalName') || 'Hospital';
   const hospitalToken = localStorage.getItem('hospitalToken');
 
   useEffect(() => {
     if (!hospitalToken) {
       navigate('/login');
-      return;
     }
+  }, [hospitalToken, navigate]);
 
-    fetchDashboardData();
-  }, [hospitalToken]);
-
-  const fetchDashboardData = async () => {
-    try {
-      // Fetch blood inventory
-      const inventoryResponse = await fetch('http://localhost:8081/api/hospitals/inventory', {
+  // Queries
+  const { data: bloodInventory = [], isLoading: isInventoryLoading, error: inventoryError } = useQuery<BloodUnit[]>({
+    queryKey: ['hospitalInventory', hospitalToken],
+    queryFn: async () => {
+      const response = await fetch(`${API_URL}/api/hospitals/inventory`, {
         headers: {
           'Authorization': `Bearer ${hospitalToken}`,
         },
       });
-
-      // Fetch pending requests
-      const requestsResponse = await fetch('http://localhost:8081/api/hospitals/donations/pending', {
-        headers: {
-          'Authorization': `Bearer ${hospitalToken}`,
-        },
-      });
-
-      // Fetch donation history
-      const historyResponse = await fetch('http://localhost:8081/api/hospitals/donations/history', {
-        headers: {
-          'Authorization': `Bearer ${hospitalToken}`,
-        },
-      });
-
-      if (!inventoryResponse.ok || !requestsResponse.ok || !historyResponse.ok) {
-        throw new Error('Failed to fetch dashboard data');
+      if (!response.ok) {
+        throw new Error('Failed to fetch blood inventory');
       }
+      return response.json();
+    },
+    enabled: !!hospitalToken,
+  });
 
-      const [inventory, requests, history] = await Promise.all([
-        inventoryResponse.json(),
-        requestsResponse.json(),
-        historyResponse.json(),
-      ]);
+  const { data: pendingRequests = [], isLoading: isRequestsLoading, error: requestsError } = useQuery<DonationRequest[]>({
+    queryKey: ['hospitalPendingRequests', hospitalToken],
+    queryFn: async () => {
+      const response = await fetch(`${API_URL}/api/hospitals/donations/pending`, {
+        headers: {
+          'Authorization': `Bearer ${hospitalToken}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch pending requests');
+      }
+      return response.json();
+    },
+    enabled: !!hospitalToken,
+  });
 
-      setBloodInventory(inventory);
-      setPendingRequests(requests);
-      setDonationHistory(history);
-    } catch (error) {
+  const { data: donationHistory = [], isLoading: isHistoryLoading, error: historyError } = useQuery<DonationHistory[]>({
+    queryKey: ['hospitalDonationHistory', hospitalToken],
+    queryFn: async () => {
+      const response = await fetch(`${API_URL}/api/hospitals/donations/history`, {
+        headers: {
+          'Authorization': `Bearer ${hospitalToken}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch donation history');
+      }
+      return response.json();
+    },
+    enabled: !!hospitalToken,
+  });
+
+  useEffect(() => {
+    if (inventoryError || requestsError || historyError) {
       toast({
         title: "Error",
         description: "Failed to fetch dashboard data.",
       });
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [inventoryError, requestsError, historyError, toast]);
 
-  const generateOTP = async (requestId: string) => {
-    setGeneratingOtpId(requestId);
-    try {
+  // Mutations
+  const generateOtpMutation = useMutation({
+    mutationFn: async (requestId: string) => {
       const hospitalId = localStorage.getItem('hospitalId');
-      const response = await fetch(`http://localhost:8081/api/hospitals/${hospitalId}/generate-otp/${requestId}`, {
+      const response = await fetch(`${API_URL}/api/hospitals/${hospitalId}/generate-otp/${requestId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${hospitalToken}`,
@@ -108,22 +115,26 @@ export const HospitalDashboard = () => {
         throw new Error('Failed to generate OTP');
       }
 
-      const { otp } = await response.json();
+      return response.json();
+    },
+    onSuccess: (data) => {
       toast({
         title: "OTP Generated",
-        description: `OTP for verification: ${otp}`,
+        description: `OTP for verification: ${data.otp}`,
       });
-
-      fetchDashboardData();
-    } catch (error) {
+      
+      // Invalidate queries to automatically refresh lists
+      queryClient.invalidateQueries({ queryKey: ['hospitalPendingRequests'] });
+      queryClient.invalidateQueries({ queryKey: ['hospitalInventory'] });
+      queryClient.invalidateQueries({ queryKey: ['hospitalDonationHistory'] });
+    },
+    onError: () => {
       toast({
         title: "Error",
         description: "Failed to generate OTP.",
       });
-    } finally {
-      setGeneratingOtpId(null);
-    }
-  };
+    },
+  });
 
   const handleLogout = () => {
     localStorage.removeItem('hospitalToken');
@@ -131,6 +142,8 @@ export const HospitalDashboard = () => {
     localStorage.removeItem('hospitalName');
     navigate('/login');
   };
+
+  const loading = isInventoryLoading || isRequestsLoading || isHistoryLoading;
 
   if (loading) {
     return (
@@ -265,11 +278,11 @@ export const HospitalDashboard = () => {
                           </p>
                         </div>
                         <button
-                          onClick={() => generateOTP(request._id)}
-                          disabled={generatingOtpId === request._id}
+                          onClick={() => generateOtpMutation.mutate(request._id)}
+                          disabled={generateOtpMutation.isPending && generateOtpMutation.variables === request._id}
                           className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-blood hover:bg-blood-dark disabled:opacity-50 disabled:cursor-not-allowed gap-1"
                         >
-                          {generatingOtpId === request._id ? (
+                          {generateOtpMutation.isPending && generateOtpMutation.variables === request._id ? (
                             <>
                               <Loader2 className="h-4 w-4 animate-spin" />
                               Generating...
