@@ -19,7 +19,10 @@ export const BloodRequestForm = () => {
     hospital: '',
     address: ''
   });
-
+  const [userLocation, setUserLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -28,25 +31,31 @@ export const BloodRequestForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate submission delay
     setTimeout(() => {
       // Save patient request to localStorage
       const existingRequests = JSON.parse(localStorage.getItem('blood-requests') || '[]');
-      const updatedRequests = [...existingRequests, formData];
+      const updatedRequests = [
+        ...existingRequests,
+        {
+          ...formData,
+          userLocation,
+        },
+      ];
       localStorage.setItem('blood-requests', JSON.stringify(updatedRequests));
-      
+
       // Scroll to the top of the page
       window.scrollTo(0, 0);
-      
+
       setIsSubmitting(false);
       setIsSearching(true);
-      
+
       // Simulate search delay
       setTimeout(() => {
         setIsSearching(false);
         setIsSubmitted(true);
-        
+
         toast({
           title: "Request submitted",
           description: "We're connecting you with compatible donors in your area.",
@@ -58,11 +67,15 @@ export const BloodRequestForm = () => {
 
   const getLocation = () => {
     setIsGettingLocation(true);
-    
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           console.log("Location obtained:", position.coords);
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
           // Get address from coordinates using reverse geocoding
           fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}&addressdetails=1`)
             .then(response => {
@@ -74,7 +87,7 @@ export const BloodRequestForm = () => {
             .then(data => {
               console.log("Geocoding data:", data);
               let address = '';
-              
+
               if (data && data.display_name) {
                 address = data.display_name;
               } else if (data && data.address) {
@@ -93,7 +106,7 @@ export const BloodRequestForm = () => {
                 // Fallback to coordinates
                 address = `Lat: ${position.coords.latitude.toFixed(6)}, Lng: ${position.coords.longitude.toFixed(6)}`;
               }
-              
+
               setFormData(prev => ({ ...prev, address }));
               toast({
                 title: "Location detected",
@@ -103,9 +116,9 @@ export const BloodRequestForm = () => {
             })
             .catch(error => {
               console.error("Error getting address:", error);
-              setFormData(prev => ({ 
-                ...prev, 
-                address: `Lat: ${position.coords.latitude.toFixed(6)}, Lng: ${position.coords.longitude.toFixed(6)}` 
+              setFormData(prev => ({
+                ...prev,
+                address: `Lat: ${position.coords.latitude.toFixed(6)}, Lng: ${position.coords.longitude.toFixed(6)}`
               }));
               setIsGettingLocation(false);
               toast({
@@ -118,7 +131,7 @@ export const BloodRequestForm = () => {
         (error) => {
           console.error("Error getting location:", error);
           setIsGettingLocation(false);
-          
+
           let errorMessage = "Couldn't access your location.";
           switch (error.code) {
             case error.PERMISSION_DENIED:
@@ -131,7 +144,7 @@ export const BloodRequestForm = () => {
               errorMessage += " The request to get location timed out.";
               break;
           }
-          
+
           toast({
             title: "Location error",
             description: errorMessage,
@@ -170,7 +183,7 @@ export const BloodRequestForm = () => {
           </div>
           <h2 className="text-2xl font-bold mb-2 text-blood">Searching for donors...</h2>
           <p className="text-muted-foreground">Looking for compatible {formData.bloodGroup} donors near you</p>
-          
+
           <div className="mt-6 flex justify-center">
             <div className="flex items-center space-x-2">
               <div className="h-2 w-2 rounded-full bg-blood animate-pulse"></div>
@@ -185,7 +198,7 @@ export const BloodRequestForm = () => {
             <h2 className="text-2xl font-bold text-blood">Request Blood Donation</h2>
             <p className="text-muted-foreground">Please fill in the patient details</p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label htmlFor="patientName" className="block text-sm font-medium">
@@ -203,7 +216,7 @@ export const BloodRequestForm = () => {
                 placeholder="Patient's full name"
               />
             </div>
-            
+
             <div className="space-y-2">
               <label htmlFor="age" className="block text-sm font-medium">
                 Age
@@ -222,7 +235,7 @@ export const BloodRequestForm = () => {
                 placeholder="Patient's age"
               />
             </div>
-            
+
             <div className="space-y-2">
               <label htmlFor="gender" className="block text-sm font-medium">
                 Gender
@@ -241,7 +254,7 @@ export const BloodRequestForm = () => {
                 <option value="other">Other</option>
               </select>
             </div>
-            
+
             <div className="space-y-2">
               <label htmlFor="phone" className="block text-sm font-medium">
                 Phone Number
@@ -258,7 +271,7 @@ export const BloodRequestForm = () => {
                 placeholder="Contact number"
               />
             </div>
-            
+
             <div className="space-y-2">
               <label htmlFor="bloodGroup" className="block text-sm font-medium">
                 Blood Group
@@ -282,11 +295,11 @@ export const BloodRequestForm = () => {
                 <option value="O-">O-</option>
               </select>
             </div>
-            
+
             <div className="space-y-2">
               <label htmlFor="amount" className="block text-sm font-medium">
                 Amount Required (units)
-                1 units = 350ml 
+                1 units = 350ml
               </label>
               <input
                 id="amount"
@@ -301,7 +314,7 @@ export const BloodRequestForm = () => {
                 placeholder="Number of units needed"
               />
             </div>
-            
+
             <div className="space-y-2">
               <label htmlFor="hospital" className="block text-sm font-medium">
                 Hospital Name
@@ -318,7 +331,7 @@ export const BloodRequestForm = () => {
                 placeholder="Name of hospital"
               />
             </div>
-            
+
             <div className="space-y-2">
               <label htmlFor="address" className="block text-sm font-medium">
                 Address
@@ -335,7 +348,7 @@ export const BloodRequestForm = () => {
                   className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blood focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Hospital or patient location"
                 />
-                <button 
+                <button
                   type="button"
                   onClick={getLocation}
                   className="px-3 py-2 bg-blood/20 hover:bg-blood/30 text-blood rounded-lg flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -354,7 +367,7 @@ export const BloodRequestForm = () => {
               )}
             </div>
           </div>
-          
+
           <div className="pt-4">
             <button
               type="submit"

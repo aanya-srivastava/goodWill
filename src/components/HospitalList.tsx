@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { ChevronLeft, MapPin, X } from 'lucide-react';
-
+import { HospitalMap } from "./HospitalMap";
 interface HospitalListProps {
   onBack: () => void;
 }
@@ -12,6 +12,8 @@ interface Hospital {
   address: string;
   distance: string;
   hours: string;
+   lat: number;
+  lng: number;
 }
 
 export const HospitalList: React.FC<HospitalListProps> = ({ onBack }) => {
@@ -24,24 +26,37 @@ export const HospitalList: React.FC<HospitalListProps> = ({ onBack }) => {
       name: 'City General Hospital', 
       address: '123 Main Street, Downtown, 10001',
       distance: '2.5 km',
-      hours: 'Open 24 hours'
+      hours: 'Open 24 hours',
+       lat: 19.2183,
+    lng: 73.1636
     },
     {
       id: 2, 
       name: 'Mercy Medical Center', 
       address: '456 Park Avenue, Midtown, 10002',
       distance: '3.8 km',
-      hours: 'Open 24 hours'
+      hours: 'Open 24 hours',
+       lat: 19.2268,
+    lng: 73.1452
     },
     {
       id: 3, 
       name: 'St. John\'s Hospital', 
       address: '789 Broadway, Uptown, 10003',
       distance: '5.2 km',
-      hours: '8:00 AM - 8:00 PM'
+      hours: '8:00 AM - 8:00 PM',
+      lat: 19.2476,
+    lng: 73.1725
     },
   ];
+  const requests = JSON.parse(
+  localStorage.getItem("blood-requests") || "[]"
+);
 
+const latestRequest =
+  requests.length > 0 ? requests[requests.length - 1] : null;
+
+const userLocation = latestRequest?.userLocation || null;
   const openMap = (address: string) => {
     const encodedAddress = encodeURIComponent(address);
     window.open(`https://maps.google.com/?q=${encodedAddress}`, '_blank');
@@ -62,6 +77,16 @@ export const HospitalList: React.FC<HospitalListProps> = ({ onBack }) => {
         <p className="text-muted-foreground">
           Select a hospital to view details and location
         </p>
+        {userLocation ? (
+    <HospitalMap
+      hospitals={hospitals}
+      userLocation={userLocation}
+    />
+  ) : (
+    <div className="rounded-xl border p-6 text-muted-foreground bg-secondary/20">
+      Your location is unavailable. Hospital locations are shown in the list below.
+    </div>
+  )}
       </div>
       
       {selectedHospital ? (
