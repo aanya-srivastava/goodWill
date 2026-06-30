@@ -35,6 +35,7 @@ export const BloodDonationForm = () => {
 
   const form = useForm<BloodDonationFormData>({
     resolver: zodResolver(bloodDonationSchema),
+    mode: "onTouched",
     defaultValues: {
       donorName: "",
       age: undefined as unknown as number,
